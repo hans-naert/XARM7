@@ -1,0 +1,22 @@
+services:
+  xarm7-sim:
+    build: .
+    container_name: xarm7-sim
+    privileged: true
+    network_mode: host
+    ipc: host
+    environment:
+      - DISPLAY=:0
+      - WAYLAND_DISPLAY=wayland-0
+      - XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
+      - PULSE_SERVER=/mnt/wslg/PulseServer
+      - QT_QPA_PLATFORM=xcb
+      - QT_X11_NO_MITSHM=1
+      - LIBGL_ALWAYS_SOFTWARE=1
+      - MESA_GL_VERSION_OVERRIDE=3.3
+      - ROS_DOMAIN_ID=42
+      - ROS_LOCALHOST_ONLY=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /mnt/wslg:/mnt/wslg
+    restart: unless-stopped
