@@ -4,8 +4,7 @@ A Docker-based simulation environment for the xArm7 robotic arm using ROS 2 Humb
 
 ## Demo
 
-https://github.com/hans-naert/XARM7/raw/refs/heads/main/media/moving_the_robot.mp4
-
+https://github.com/user-attachments/assets/cb43e891-b189-4561-9a3b-d466995449d2
 > *Drag the interactive marker to set a goal pose, then click "Plan & Execute"*
 
 ## Prerequisites
