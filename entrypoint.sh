@@ -12,4 +12,8 @@ rm -rf ~/.ros/log/* 2>/dev/null || true
 ros2 daemon stop 2>/dev/null || true
 sleep 2
 
-exec ros2 launch xarm_planner xarm7_planner_fake.launch.py
+if [ "$#" -eq 0 ]; then
+    exec ros2 launch xarm_planner xarm7_planner_fake.launch.py
+else
+    exec "$@"
+fi
