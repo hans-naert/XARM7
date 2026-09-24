@@ -28,9 +28,9 @@ With no arguments provided the simulation launches:
 - **MoveIt 2** - Motion planning framework
 - **ros2_control** - Robot controller interface
 
-Open a shell in a second terminal window, to test your scripts.
+You can open a new shell in a second terminal window to test your scripts.
 ```bash
-# Start a bash shell into your container
+# Start a bash shell into your already running ROS container
 docker exec -it xarm7-sim bash
 
 # Source ROS inside the new shell
