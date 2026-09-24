@@ -6,7 +6,7 @@ services:
     network_mode: host
     ipc: host
     environment:
-      - DISPLAY=:0
+      - DISPLAY=:1
       - WAYLAND_DISPLAY=wayland-0
       - XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
       - PULSE_SERVER=/mnt/wslg/PulseServer
@@ -19,4 +19,5 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /mnt/wslg:/mnt/wslg
+      - ./src:/home/ubuntu/src
     restart: unless-stopped
