@@ -1,36 +1,74 @@
-# xArm7 ROS 2 Simulation
+# xArm7 ROS 2 Development Environment
 
-A Docker-based simulation environment for the xArm7 robotic arm using ROS 2 Humble and MoveIt 2.
+A Docker-based development environment for the xArm7 robotic arm using ROS 2 Humble and MoveIt 2. Supports both simulation and control of a physical xArm7.
 
 ## Demo
 
 https://github.com/user-attachments/assets/cb43e891-b189-4561-9a3b-d466995449d2
-> *Drag the interactive marker to set a goal pose, then click "Plan & Execute"*
+
+> **Drag the interactive marker to set a goal pose, then click "Plan & Execute"**
 
 ## Prerequisites
 
-- Windows 10/11 with WSL2
-- Docker Desktop with WSL2 backend
-- WSLg (included in Windows 11, or Windows 10 build 21364+)
+* Ubuntu/Linux or Windows 10/11 with WSL2
+* Docker
+* For WSL2: WSLg (included in Windows 11, or Windows 10 build 21364+)
 
 ## Quick Start
 
 ```bash
 # Build the container
-docker-compose build
 
-# Start the simulation
-docker-compose up
+docker compose build
 ```
 
-With no arguments provided the simulation launches:
-- **RViz2** - Visualization and motion planning interface
-- **MoveIt 2** - Motion planning framework
-- **ros2_control** - Robot controller interface
+### Options
+1. Start a simulation
+2. Control a real robot
+3. Use your own commands
 
-You can open a new shell in a second terminal window to test your scripts.
+#### Start the simulation
+```
+docker compose run --rm xarm7-sim sim
+```
+
+Simulation launches:
+
+* **RViz2** - Visualization and motion planning interface
+
+* **MoveIt 2** - Motion planning framework
+
+* **ros2_control** - Robot controller interface
+
+#### Physical xArm
+To connect to a physical xArm7:
+
 ```bash
-# Start a bash shell into your already running ROS container
+docker compose run --rm xarm7-sim real <robot_ip>
+```
+
+For example:
+
+```bash
+docker compose run --rm xarm7-sim real 192.168.1.237
+```
+
+The computer running Docker must be able to reach the robot over the network.
+
+```bash
+ping 192.168.1.237
+```
+
+#### Your own bash shell inside the container
+To start a ROS-configured Bash shell instead:
+
+```bash
+docker compose run --rm xarm7-sim bash
+```
+
+You can also open a new shell in an already running container:
+
+```bash
 docker exec -it xarm7-sim bash
 
 # Source ROS inside the new shell
@@ -43,16 +81,22 @@ source /home/ubuntu/ros2_ws/install/setup.bash
 ### Method 1: RViz Interactive Markers (Recommended)
 
 1. In RViz, look for the **interactive marker** (colored sphere/arrows) at the robot's end effector
+
 2. **Drag the marker** to set a target pose
+
 3. Click **"Plan & Execute"** in the MotionPlanning panel (left side)
 
 ### Method 2: MoveIt Motion Planning Panel
 
 1. In RViz's **MotionPlanning** panel:
-   - Go to the **"Planning"** tab
-   - Set **Goal State** to a predefined pose or "random valid"
-   - Click **"Plan"** to preview the trajectory
-   - Click **"Execute"** to move the robot
+
+   * Go to the **"Planning"** tab
+
+   * Set **Goal State** to a predefined pose or "random valid"
+
+   * Click **"Plan"** to preview the trajectory
+
+   * Click **"Execute"** to move the robot
 
 ### Method 3: Command Line (ros2 action)
 
@@ -84,23 +128,12 @@ ros2 action send_goal /xarm7_traj_controller/follow_joint_trajectory \
 
 ### Method 4: Python Script
 
-Create a Python script inside the container:
-
-```python
-#!/usr/bin/env python3
-import rclpy
-from rclpy.node import Node
-from moveit_msgs.action import MoveGroup
-from geometry_msgs.msg import PoseStamped
-
-# Use MoveIt's Python API for more complex motion planning
-# See: https://moveit.picknik.ai/main/doc/examples/examples.html
-```
+Python scripts can use ROS 2 and the xArm planner services to plan and execute robot motions.
 
 ## Useful Commands
 
 ```bash
-# Enter the container
+# Enter an already running container
 docker exec -it xarm7-sim bash
 
 # List available topics
@@ -118,38 +151,71 @@ ros2 control list_controllers
 
 ## File Structure
 
-```
+```text
 XARM7/
+
 ├── docker-compose.yml   # Container configuration
 ├── Dockerfile           # Image build instructions
 ├── cyclonedds.xml       # DDS configuration (optional)
 ├── entrypoint.sh        # Startup script
+├── src/                 # User scripts / development code
 └── README.md            # This file
 ```
 
 ## Troubleshooting
 
 ### RViz doesn't display / black screen
-- Ensure WSLg is working: `echo $DISPLAY` should show `:0`
-- Try: `export LIBGL_ALWAYS_SOFTWARE=1`
-
-### Nodes crash with SIGABRT
-- Check Docker has enough memory (Settings → Resources → 4GB+)
-- Ensure `ipc: host` is set in docker-compose.yml
-
-### Cannot connect to robot
-- This is a **simulation** - no real robot connection needed
-- The fake controller simulates joint movements
-
-## Stopping the Simulation
+Check that the display variable is set:
+```bash
+echo $DISPLAY
+```
+The container must have access to the same X display as the host.
+If RViz reports that it cannot connect to the display, allow local Docker containers to access the X server:
 
 ```bash
-docker-compose down
+xhost +local:docker
+```
+The permission can later be revoked with:
+```bash
+xhost -local:docker
+```
+If necessary, software rendering can also be tested with:
+```bash
+export LIBGL_ALWAYS_SOFTWARE=1
 ```
 
-## License
+### Nodes crash with SIGABRT
+* Check Docker has enough memory (Settings → Resources → 4GB+)
+* Ensure `ipc: host` is set in docker-compose.yml
 
+### Cannot connect to robot
+Check that the robot is reachable from inside the container:
+
+```bash
+ping <robot_ip>
+```
+
+Check that ROS receives the physical robot state:
+
+```bash
+ros2 topic echo /joint_states
+```
+
+When using the real robot configuration, RViz should reflect the joint state reported by the physical robot.
+
+## Stopping
+If the container was started with `docker compose run --rm`, stop it with `Ctrl+C`.
+To stop containers started by the Compose project:
+
+```bash
+docker compose down
+```
+
+Run this command from the directory containing `docker-compose.yml`.
+
+## License
 This project uses:
-- [xarm_ros2](https://github.com/xArm-Developer/xarm_ros2) - xArm ROS 2 packages
-- [MoveIt 2](https://moveit.ros.org/) - Motion planning framework
-- [ROS 2 Humble](https://docs.ros.org/en/humble/) - Robot Operating System
+* [xarm_ros2](https://github.com/xArm-Developer/xarm_ros2) - xArm ROS 2 packages
+* [MoveIt 2](https://moveit.ros.org/) - Motion planning framework
+* [ROS 2 Humble](https://docs.ros.org/en/humble/) - Robot Operating System
+
