@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     ros-humble-ros2-control \
     ros-humble-ros2-controllers \
     ros-humble-rmw-cyclonedds-cpp \
+    ros-humble-joint-state-publisher \
     && rm -rf /var/lib/apt/lists/*
 
 # Step 2: Build the xArm workspace INTO the image
