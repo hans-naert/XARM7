@@ -21,15 +21,6 @@ case "${1:-sim}" in
         exec ros2 launch xarm_planner xarm7_planner_realmove.launch.py \
             robot_ip:="$2"
         ;;
-
-    servo)
-        if [ -n "${2:-}" ]; then
-            exec ros2 launch xarm_moveit_servo xarm_moveit_servo_realmove.launch.py \
-                dof:=7 robot_ip:="$2"
-        fi
-        exec ros2 launch xarm_moveit_servo xarm_moveit_servo_fake.launch.py dof:=7
-        ;;
-
     *)
         exec "$@"
         ;;
