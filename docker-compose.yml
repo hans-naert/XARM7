@@ -20,4 +20,5 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /mnt/wslg:/mnt/wslg
       - ./src:/home/ubuntu/src
+      - /dev/input:/dev/input
     restart: unless-stopped

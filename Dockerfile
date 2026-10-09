@@ -22,6 +22,11 @@ RUN rosdep update && \
     rosdep install --from-paths src --ignore-src -y --rosdistro humble || true && \
     /bin/bash -c "source /opt/ros/humble/setup.bash && colcon build --symlink-install"
 
+# keypad_ctrl.py streams Cartesian velocity through MoveIt Servo.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-humble-moveit-servo \
+    && rm -rf /var/lib/apt/lists/*
+
 # Step 3: Copy config files (changes here trigger fast rebuild)
 COPY cyclonedds.xml /cyclonedds.xml
 COPY entrypoint.sh /entrypoint.sh
