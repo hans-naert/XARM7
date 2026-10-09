@@ -1,7 +1,7 @@
 services:
-  xarm7-sim:
+  xarm7-ctl:
     build: .
-    container_name: xarm7-sim
+    container_name: xarm7-ctl
     privileged: true
     network_mode: host
     ipc: host
