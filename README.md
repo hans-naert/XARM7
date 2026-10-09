@@ -27,7 +27,7 @@ docker compose build
 2. Control a real robot
 3. Use your own commands
 
-#### Start the simulation
+#### Option 1: Simulation Only
 ```
 docker compose run --rm xarm7-sim sim
 ```
@@ -40,7 +40,7 @@ Simulation launches:
 
 * **ros2_control** - Robot controller interface
 
-#### Physical xArm
+#### Option 2: Physical xArm
 To connect to a physical xArm7:
 
 ```bash
@@ -59,7 +59,7 @@ The computer running Docker must be able to reach the robot over the network.
 ping 192.168.1.237
 ```
 
-#### Your own bash shell inside the container
+#### Option 3: Your own bash shell inside the container
 To start a ROS-configured Bash shell instead:
 
 ```bash
@@ -69,11 +69,14 @@ docker compose run --rm xarm7-sim bash
 You can also open a new shell in an already running container:
 
 ```bash
-docker exec -it xarm7-sim bash
+docker exec -it hn-xarm7-sim-xarm7-sim-run-<id> bash
 
 # Source ROS inside the new shell
 source /opt/ros/humble/setup.bash
 source /home/ubuntu/ros2_ws/install/setup.bash
+
+# Launch your python script (Example)
+python3 /home/ubuntu/src/simple_move.py
 ```
 
 ## Moving the Robot
@@ -103,7 +106,7 @@ source /home/ubuntu/ros2_ws/install/setup.bash
 Open a terminal inside the container:
 
 ```bash
-docker exec -it xarm7-sim bash
+docker exec -it hn-xarm7-sim-xarm7-sim-run-<id> bash
 ```
 
 Then send a joint trajectory goal:
@@ -134,7 +137,7 @@ Python scripts can use ROS 2 and the xArm planner services to plan and execute r
 
 ```bash
 # Enter an already running container
-docker exec -it xarm7-sim bash
+docker exec -it hn-xarm7-sim-xarm7-sim-run-<id> bash
 
 # List available topics
 ros2 topic list
