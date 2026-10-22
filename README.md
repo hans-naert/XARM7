@@ -60,7 +60,7 @@ To learn more about MoveIt you can try some of the tutorials. Clone the Humble b
 
 ```bash
 mkdir -p tutorials
-git clone -b humble --depth 1 https://github.com/ros-planning/moveit2_tutorials.git tutorials/moveit2_tutorials
+git clone -b humble --depth 1 https://github.com/moveit/moveit2_tutorials.git tutorials/moveit2_tutorials
 ```
 
 Do not import `moveit2_tutorials.repos`. That clones MoveIt from source and rebuilds it beside the packages already installed in the image.
