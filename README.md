@@ -56,7 +56,7 @@ source install/setup.bash
 Launch the container with the MoveIt servo or MoveIt planner. Attach a bash shell to the running container and run `ros2 run your_package your_node`
 
 ### Optional: Build the MoveIt tutorials
-To learn more about MoveIt you can try some of the tutorials. Clone the Humble branch of the MoveIt tutorials into `tutorials/`:
+To learn more about MoveIt you can try some of the tutorials. Read the instructions to launch relevant pick and place tutorials, they can be found in `doc/A01_pick_place_tutorials.md`.  Clone the Humble branch of the MoveIt tutorials into `tutorials/`:
 
 ```bash
 mkdir -p tutorials
